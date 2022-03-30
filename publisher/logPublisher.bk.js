@@ -7,8 +7,10 @@ const zlib = require("zlib");
 //misc regex
 const regex1 = '<';
 const regex2 = '2 - ';
+const regex3 = '\\';
+const regex4 = ':"{"';
+const regex5 = '}"';
 let totRecords = 0;
-
 const provider = process.env.ANALYTIC_PROVIDER.toLocaleLowerCase();
 
 // Create and configure a Redis client.
@@ -30,16 +32,30 @@ client.on("connect", function() {
 
 async function splunk( parsedChunk, err) {
     if (err) throw err;
-    recordCount = count(parsedChunk,regex1);
-    totRecords += recordCount;
     while ( count(parsedChunk, regex1) > 0) 
         {
             parsedChunk = parsedChunk.replace(parsedChunk.substring(parsedChunk.indexOf(regex1),parsedChunk.indexOf(regex2)+3),'' );
         };
     
+    while ( count(parsedChunk, regex3) > 0) 
+        {   
+            parsedChunk = parsedChunk.replace(regex3,'' );
+        };
+    
+    while ( count(parsedChunk, regex4) > 0) 
+        {   
+            parsedChunk = parsedChunk.replace(regex4,':{"' );
+        };
+
+    while ( count(parsedChunk, regex5) > 0) 
+        {   
+            parsedChunk = parsedChunk.replace(regex5,'}' );
+        };
+    
     chunkArray = parsedChunk.split('\n');
 
     chunkArray.forEach(element => {
+        element = element + '}}';
         totRecords++;
         options = {
             hostname: process.env.SPLUNK_HOST,
@@ -56,7 +72,7 @@ async function splunk( parsedChunk, err) {
         }
 
         const req2 = https.request(options, res2 => {
-            //console.log(`statusCode: ${res2.statusCode}`);
+            console.log(`Record posted with a statusCode of: ${res2.statusCode}`);
             res2.on('data', d => {
             })
         })
@@ -69,11 +85,9 @@ async function splunk( parsedChunk, err) {
 
         // submit payload via webhook to Splunk
         req2.write(element);
-        req2.end();
+        //req2.end();
     });
-    console.log(totRecords + ' have been transmitted.');
 };
-
 
 async function datadog( parsedChunk, err) {
     if (err) throw err;
@@ -83,44 +97,66 @@ async function datadog( parsedChunk, err) {
             parsedChunk = parsedChunk.replace(parsedChunk.substring(parsedChunk.indexOf(regex1),parsedChunk.indexOf(regex2)+3),'' );
         };
     
+    while ( count(parsedChunk, regex3) > 0) 
+        {   
+            parsedChunk = parsedChunk.replace(regex3,'' );
+        };
+    
+    while ( count(parsedChunk, regex4) > 0) 
+        {   
+            parsedChunk = parsedChunk.replace(regex4,':{"' );
+        };
+
+    while ( count(parsedChunk, regex5) > 0) 
+        {   
+            parsedChunk = parsedChunk.replace(regex5,'}' );
+        };
+    
     chunkArray = parsedChunk.split('\n');
 
     chunkArray.forEach(element => {
-        totRecords++;
-        options = {
-            hostname: 'http-intake.logs.datadoghq.com',
-            rejectUnauthorized: false,
-            port: 443,
-            path: '/api/v2/logs', 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Content-Length': element.length,
-                'DD-API-KEY': process.env.DATADOG_TOKEN,
-                'Connection': 'keep-alive',
-                //'Content-Encoding': 'gzip'
+        bodyJson = [];
+        element = element.replace('{','{"ddsource": "f5dcs", "host": "f5dcs", ');
+        element = element + '}}';
+
+        if (element.length > 5 ) {
+            totRecords++;
+            options = {
+                hostname: 'http-intake.logs.datadoghq.com',
+                rejectUnauthorized: false,
+                port: 443,
+                path: '/api/v2/logs', 
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'Content-Length': element.length,
+                    'DD-API-KEY': process.env.DATADOG_TOKEN,
+                    'Connection': 'keep-alive',
+                    //'Content-Encoding': 'gzip'
+                }
             }
-        }
-
-        const req2 = https.request(options, res2 => {
-            console.log(`statusCode: ${res2.statusCode}`);
-            res2.on('data', d => {
-            })
-        })
     
-        // handle connectivity errors 
-        req2.on('error', error => {
-            console.log('The client has disconnected...\n');
-            main();
-        })
-
-        // submit payload via webhook to
-        req2.write(element);
-        req2.end();
+            const req2 = https.request(options, res2 => {
+                console.log(`Record posted with a statusCode of: ${res2.statusCode}`);
+                res2.on('data', d => {
+                })
+            })
+        
+            // handle connectivity errors 
+            req2.on('error', error => {
+                //throw error;
+                console.log('The client has disconnected...\n');
+                main();
+            })
+    
+            // submit payload via webhook to
+            req2.write(element);
+            //req2.end();
+        }
     });
-    console.log(totRecords + ' have been transmitted.');
 };
+
 
 // Function to delete key for posted record
 async function deleteRecord (key, err) {
