@@ -3,10 +3,10 @@ kind: ConfigMap
 metadata:
   name: vendor-info
 data:
-    splunk_host: "206.124.129.189"
-    splunk_hec: "bc5199eb-655b-458b-b7bd-5b348b099338"
-    datadog_token: "0d9752d49b9378148680ddb0ca1f8c48"
-    analytic_provider: "datadog"
+    splunk_host: "XXX.XXX.XXX.XXX"
+    splunk_hec: "asdlsdfaowijasdfasdflasuassdflksjad"
+    datadog_token: "enter token value"
+    analytic_provider: "enter splunk or datadog"  
 ---
 apiVersion: apps/v1
 kind: Deployment
