@@ -13,7 +13,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update
 RUN apt install -y npm
 RUN apt install -y nodejs
-RUN npm install https redis@3.1.2 flat query-string
+RUN npm install https redis@3.1.2 flat
 RUN apt clean
 
 # Copy logPublisher.js script and config file then start logReceiverProxy

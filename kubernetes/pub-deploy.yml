@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pub-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        application: f5dcs-logReceiverProxy
+        component: pub-service
+  template:
+    metadata:
+      labels:
+        application: f5dcs-logReceiverProxy
+        component: pub-service
+    spec:
+      containers:
+        - name: pub-service
+          image: gregorycoward/f5dcs-logpublisher:1.2.1
+          env:
+          - name: SPLUNK_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: splunk_host
+          - name: SPLUNK_HEC
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: splunk_hec
+          - name: DATADOG_TOKEN
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: datadog_token
+          - name: ANALYTIC_PROVIDER
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: analytic_provider

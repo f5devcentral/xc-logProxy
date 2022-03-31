@@ -1,7 +1,6 @@
 #Download base image ubuntu 20.04
 FROM ubuntu:20.04
 
-
 # LABEL about the custom image
 LABEL maintainer="g.coward@f5.com"
 LABEL version="0.1"

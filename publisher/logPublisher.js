@@ -15,7 +15,7 @@ const provider = process.env.ANALYTIC_PROVIDER.toLocaleLowerCase();
 
 // Create and configure a Redis client.
 const client = redis.createClient({
-    host: 'redis-server',
+    host: process.env.REDIS_SERVER_SERVICE_HOST,
     port: 6379
   }); 
 

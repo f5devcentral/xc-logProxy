@@ -5,9 +5,10 @@ const net = require('net');
 const crypto = require("crypto");
 const redis = require("redis");
 
+
 // Create and configure a Redis client.
 const client = redis.createClient({
-    host: process.env.REDIS_SERVER_SERVICE_HOST,
+    host: 'redis-server',
     port: 6379
   }); 
   

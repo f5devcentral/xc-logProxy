@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vendor-info
+data:
+    splunk_host: "XXX.XXX.XXX.XXX"
+    splunk_hec: "asdlsdfaowijasdfasdflasuassdflksjad"
+    datadog_token: "enter token value"
+    analytic_provider: "enter splunk or datadog"  
