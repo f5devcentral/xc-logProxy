@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: redis-server
-        image: redis
+        image: gregorycoward/redis:1.0.0
         ports:
         - containerPort: 6379
 ---
