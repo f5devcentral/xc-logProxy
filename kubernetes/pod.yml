@@ -3,38 +3,33 @@ kind: ConfigMap
 metadata:
   name: vendor-info
 data:
-    splunk_host: "XXX.XXX.XXX.XXX"
-    splunk_hec: "asdlsdfaowijasdfasdflasuassdflksjad"
+    splunk_host: "206.124.129.189"
+    splunk_hec: "b5630812-ea0b-46b4-a559-ea3d41e511ff"
     datadog_token: "enter token value"
-    analytic_provider: "enter splunk or datadog"
-    listen_port: "30601" 
+    analytic_provider: "splunk"
+    listen_port: 30601
 ---
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-  name: rec-service
+  name: log-proxy
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      application: f5dcs-logReceiverProxy
-      component: rec-service
-  template:
-    metadata:
-      labels:
-        application: f5dcs-logReceiverProxy
-        component: rec-service
-    spec:
-      containers:
+  containers:
       - name: redis-server
         image: gregorycoward/redis:1.0.0
         ports:
         - containerPort: 6379
       - name: rec-service
-        image: gregorycoward/f5dcs-logreceiver:1.2.3
+        image: gregorycoward/f5dcs-logreceiver:1.2.2
+        env:
+          - name: LISTEN_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: listen_port
         ports:
         - name: rec-service
-          containerPort: 30601
+          containerPort: 601
           protocol: TCP
       - name: pub-service
         image: gregorycoward/f5dcs-logpublisher:1.2.2
@@ -71,5 +66,5 @@ spec:
   selector:
     component: rec-service
   ports:
-  - port: 30601
-    targetPort: 30601
+  - port: 601
+    targetPort: 601

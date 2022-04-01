@@ -4,20 +4,20 @@ version: '3.3'
 services:
   redis-server:
     # Use Docker Hub base image 'redis' 
-    image: 'redis'
+    image: 'gregorycoward/redis:1.0.0'
   receiver-service:
     restart: on-failure
-    image: 'gregorycoward/f5dcs-logreceiver:1.0.0'
+    image: 'gregorycoward/f5dcs-logreceiver:1.1.0'
     # Specify an array of ports to map
     environment:
-      - RECV_PORT=601
+      - LISTEN_PORT=30601
     ports:
-      - '601:601'
+      - '30601:30601'
   publisher-service:
     restart: on-failure
     image: 'gregorycoward/f5dcs-logpublisher:1.1.0'
     environment:
-      - SPLUNK_HOST=
-      - SPLUNK_HEC= 
-      - DATADOG_TOKEN= 
-      - ANALYTIC_PROVIDER=datadog  #Enter either 'splunk' or 'datadog'
+      - SPLUNK_HOST=XXX.XXX.XXX.XXX
+      - SPLUNK_HEC=enter splunk or datadog
+      - DATADOG_TOKEN=enter token value
+      - ANALYTIC_PROVIDER=datadog #Enter either 'splunk' or 'datadog'

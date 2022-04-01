@@ -5,15 +5,16 @@ const net = require('net');
 const crypto = require("crypto");
 const redis = require("redis");
 
+
 // Create and configure a Redis client.
 const client = redis.createClient({
-    host: process.env.REDIS_SERVER_SERVICE_HOST,
+    host: 'redis-server',
     port: 6379
   }); 
   
 //Import in Values
 const listenerIP =  '0.0.0.0';
-const port = 601;
+const port = process.env.LISTEN_PORT;
 
 let chunks = [];
 

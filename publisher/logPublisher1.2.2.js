@@ -14,10 +14,7 @@ let totRecords = 0;
 const provider = process.env.ANALYTIC_PROVIDER.toLocaleLowerCase();
 
 // Create and configure a Redis client.
-const client = redis.createClient({
-    host: process.env.REDIS_SERVER_SERVICE_HOST,
-    port: 6379
-  }); 
+const client = redis.createClient(); 
 
 function count(str, find, err) {
     if (err) {

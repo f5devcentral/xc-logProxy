@@ -17,5 +17,5 @@ RUN npm install https redis@3.1.2 flat
 RUN apt clean
 
 # Copy logPublisher.js script and config file then start logReceiverProxy
-COPY logPublisher.js /logPublisher.js
+COPY logPublisher.1.1.0.js /logPublisher.js
 ENTRYPOINT ["node", "logPublisher.js"]
