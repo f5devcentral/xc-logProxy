@@ -3,16 +3,16 @@ kind: ConfigMap
 metadata:
   name: vendor-info
 data:
-    splunk_host: "XXX.XXX.XXX.XXX"
-    splunk_hec: "asdlsdfaowijasdfasdflasuassdflksjad"
-    datadog_token: "enter token value"
-    analytic_provider: "enter splunk or datadog"
+    splunk_host: "xxxxxxxxxxxxxx"
+    splunk_hec: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    datadog_token: "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+    analytic_provider: "datadog"
     listen_port: "30601" 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rec-service
+  name: log-receiver-proxy
 spec:
   replicas: 1
   selector:
@@ -31,13 +31,19 @@ spec:
         ports:
         - containerPort: 6379
       - name: rec-service
-        image: gregorycoward/f5dcs-logreceiver:1.2.3
+        image: gregorycoward/f5dcs-logreceiver:1.2.0
+        env:
+          - name: LISTEN_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: listen_port
         ports:
         - name: rec-service
           containerPort: 30601
           protocol: TCP
       - name: pub-service
-        image: gregorycoward/f5dcs-logpublisher:1.2.2
+        image: gregorycoward/f5dcs-logpublisher:1.2.0
         env:
           - name: SPLUNK_HOST
             valueFrom:
@@ -63,11 +69,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rec-service
+  name: log-receiver-proxy-service
   labels:
     component: rec-service
 spec:
-  type: NodePort
   selector:
     component: rec-service
   ports:
