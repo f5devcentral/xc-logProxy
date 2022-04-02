@@ -6,7 +6,7 @@ The F5DCS Log Receiver Proxy solution creates a intermediary service for an F5DC
    .. image:: module1/images/lab_layout.png
     - **Log Re-formatting** The F5DCS log receiver currently delivers logs in 
 
-<img src="images/logreceiver.png" alt="Flowers">
+<img src="images/logreceiver.png" width=75% height=75% alt="Flowers">
 
 
    
