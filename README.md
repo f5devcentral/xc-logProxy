@@ -3,7 +3,6 @@ F5 Distributed Cloud Services - Log Receiver Proxy
 
 The F5DCS Log Receiver Proxy solution creates a intermediary service for an F5DCS logreceiver The log proxy provides:
 
-   .. image:: module1/images/lab_layout.png
     - **Log Re-formatting** The F5DCS log receiver currently delivers logs in 
 
 <img src="images/logreceiver.png" width=75% height=75% alt="Flowers">
