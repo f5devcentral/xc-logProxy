@@ -53,11 +53,11 @@ client.on("connect", function() {
     console.log("You are now connected");
 });
 
-async function splunk( parsedChunk, err) {
+async function splunk( fmtPayload, err) {
     if (err) throw err;
 
-    chunkArray = parsedChunk.split('\n');
-    chunkArray.forEach(element => {
+    payloadArray = fmtPayload.split('\n');
+    payloadArray.forEach(element => {
         element = element + '}}';
         totRecords++;
         options = {
@@ -92,10 +92,10 @@ async function splunk( parsedChunk, err) {
     });
 };
 
-async function datadog( parsedChunk, err) {
+async function datadog( fmtPayload, err) {
     if (err) throw err;
-    chunkArray = parsedChunk.split('\n');
-    chunkArray.forEach(element => {
+    payloadArray = fmtPayload.split('\n');
+    payloadArray.forEach(element => {
         bodyJson = [];
         element = element.replace('{','{"ddsource": "f5dcs", "host": "f5dcs", ');
         element = element + '}}';

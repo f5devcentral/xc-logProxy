@@ -14,10 +14,7 @@ let totRecords = 0;
 const provider = process.env.ANALYTIC_PROVIDER.toLocaleLowerCase();
 
 // Create and configure a Redis client.
-const client = redis.createClient({
-    host: 'redis-server',
-    port: 6379
-  }); 
+const client = redis.createClient(); 
 
 function count(str, find, err) {
     if (err) {
@@ -53,11 +50,11 @@ client.on("connect", function() {
     console.log("You are now connected");
 });
 
-async function splunk( parsedChunk, err) {
+async function splunk( fmtPayload, err) {
     if (err) throw err;
 
-    chunkArray = parsedChunk.split('\n');
-    chunkArray.forEach(element => {
+    payloadArray = fmtPayload.split('\n');
+    payloadArray.forEach(element => {
         element = element + '}}';
         totRecords++;
         options = {
@@ -92,10 +89,11 @@ async function splunk( parsedChunk, err) {
     });
 };
 
-async function datadog( parsedChunk, err) {
+async function datadog( fmtPayload, err) {
     if (err) throw err;
-    chunkArray = parsedChunk.split('\n');
-    chunkArray.forEach(element => {
+
+    payloadArray = fmtPayload.split('\n');
+    payloadArray.forEach(element => {
         bodyJson = [];
         element = element.replace('{','{"ddsource": "f5dcs", "host": "f5dcs", ');
         element = element + '}}';
