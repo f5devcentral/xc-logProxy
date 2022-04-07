@@ -1,3 +1,2 @@
-publisher/Dockerfile
 deploy.yml
 docker-compose.yml
