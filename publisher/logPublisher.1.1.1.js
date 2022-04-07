@@ -1,8 +1,6 @@
 // Import the filesystem module
 const https = require('https');
 const redis = require("redis");
-const flatten = require('flat').flatten;
-const zlib = require("zlib");
 
 //misc regex
 const regex1 = '<';
@@ -94,12 +92,12 @@ async function splunk( fmtPayload, err) {
 
 async function datadog( fmtPayload, err) {
     if (err) throw err;
+
     payloadArray = fmtPayload.split('\n');
     payloadArray.forEach(element => {
-        bodyJson = [];
+        
         element = element.replace('{','{"ddsource": "f5dcs", "host": "f5dcs", ');
         element = element + '}}';
-
         if (element.length > 5 ) {
             totRecords++;
             options = {
@@ -133,11 +131,10 @@ async function datadog( fmtPayload, err) {
     
             // submit payload via webhook to
             req2.write(element);
-            //req2.end();
+            req2.end();
         }
     });
 };
-
 
 // Function to delete key for posted record
 async function deleteRecord (key, err) {

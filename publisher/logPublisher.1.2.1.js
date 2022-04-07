@@ -1,8 +1,6 @@
 // Import the filesystem module
 const https = require('https');
 const redis = require("redis");
-const flatten = require('flat').flatten;
-const zlib = require("zlib");
 
 //misc regex
 const regex1 = '<';
@@ -94,14 +92,14 @@ async function datadog( fmtPayload, err) {
 
     payloadArray = fmtPayload.split('\n');
     payloadArray.forEach(element => {
-        bodyJson = [];
-        element = element.replace('{','{"ddsource": "f5dcs", "host": "f5dcs", ');
-        element = element + '}}';
 
+        element = element.replace('{','{"ddsource": "f5dcs", "host": "f5dcs"');
+        element = element + '}}';
         if (element.length > 5 ) {
             totRecords++;
             options = {
                 hostname: 'http-intake.logs.datadoghq.com',
+                Host: 'logProxy',
                 rejectUnauthorized: false,
                 port: 443,
                 path: '/api/v2/logs', 
