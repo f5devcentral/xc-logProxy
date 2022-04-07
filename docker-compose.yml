@@ -15,9 +15,9 @@ services:
       - '30601:30601'
   publisher-service:
     restart: on-failure
-    image: 'gregorycoward/f5dcs-logpublisher:1.1.0'
+    image: 'gregorycoward/f5dcs-logpublisher:1.1.1'
     environment:
-      - SPLUNK_HOST=XXX.XXX.XXX.XXX
-      - SPLUNK_HEC=enter splunk or datadog
-      - DATADOG_TOKEN=enter token value
-      - ANALYTIC_PROVIDER=datadog #Enter either 'splunk' or 'datadog'
+      - SPLUNK_HOST=206.124.129.189
+      - SPLUNK_HEC=this is atesf
+      - DATADOG_TOKEN=mondkeyasdf
+      - ANALYTIC_PROVIDER=splunk    # - Enter either 'splunk' or 'datadog'
