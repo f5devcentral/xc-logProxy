@@ -15,7 +15,7 @@ services:
       - '30601:30601'
   publisher-service:
     restart: on-failure
-    image: 'gregorycoward/f5dcs-logpublisher:1.1.1'
+    image: 'gregorycoward/f5dcs-logpublisher:1.1.0'
     environment:
       - SPLUNK_HOST=xxxxxxxxxxxx
       - SPLUNK_HEC=txxxxxxxxxxxxxxxxxxxxxxxxxxxxx
