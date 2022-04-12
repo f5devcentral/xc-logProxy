@@ -7,7 +7,7 @@ The F5DCS LogProxy solution creates a intermediary service for an F5DCS logrecei
 
 **Enhanced Log Delivery Security**  The F5DCS log receiver offers limited configurability, (*protocol, hostname/IP, and destination port*).  The configuration options available may be sufficient for connections to analytics provider hosted locally and the log recevier supports TLS for transpot security to remote connections.  However, it does not provide a means for authentication to remote anayltics endpoints.  For access authentication to most remote services such as Datadog or to Splunk, (*over HTTPS*), the log receiver(s) will require an intermediary device. 
 
-The LogProxy service, (hosted locally) inserts the apporpriate[^1] authentication token and securely proxies log streaming over HTTPS.
+The LogProxy service, (*hosted locally*) inserts the apporpriate[^1] authentication token and securely proxies log streaming over HTTPS.
 
 <img src="images/logreceiver.png" width=100% height=75% alt="Flowers">
 
