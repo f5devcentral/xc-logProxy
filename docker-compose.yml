@@ -17,7 +17,7 @@ services:
     restart: on-failure
     image: 'gregorycoward/f5dcs-logpublisher:1.1.0'
     environment:
-      - SPLUNK_HOST=206.124.129.189
-      - SPLUNK_HEC=ba5dce62-0254-474d-80b5-b25b30198ecb
-      - DATADOG_TOKEN=a1354e93ef308fa95daac9c63628eec6
+      - SPLUNK_HOST=xxxxxxxxxxxxxx
+      - SPLUNK_HEC=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      - DATADOG_TOKEN=xxxxxxxxxxxxxxxxxxxxxxx
       - ANALYTIC_PROVIDER=splunk    # - Enter either 'splunk' or 'datadog'
