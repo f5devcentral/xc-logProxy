@@ -3,9 +3,9 @@ kind: ConfigMap
 metadata:
   name: vendor-info
 data:
-    splunk_host: "xxxxxxxxxxxxxx"
-    splunk_hec: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    datadog_token: "xxxxxxxxxxxxxxxxxxxxxxxxxx"
+    splunk_host: "206.124.129.189"
+    splunk_hec: "ba5dce62-0254-474d-80b5-b25b30198ecb"
+    datadog_token: "a1354e93ef308fa95daac9c63628eec6"
     analytic_provider: "datadog"
     listen_port: "30601" 
 ---

@@ -17,7 +17,7 @@ RUN npm install net crypto redis@3.1.2
 RUN apt clean
 
 # Copy logReceiver.js script and config file then start logReceiverProxy
-COPY logReceiver.1.2.0.js /logReceiver.js
+COPY logReceiver.1.1.0.js /logReceiver.js
 CMD ["node", "logReceiver.js"]
 
 # Expose Port for the Application 

@@ -72,7 +72,7 @@ async function splunk( fmtPayload, err) {
         })
 
         // submit payload via webhook to Splunk
-        req.write(element);
+        req.write(element.trim());
         //req.end();
     });
 };
@@ -82,9 +82,9 @@ async function datadog( fmtPayload, err) {
 
     payloadArray = fmtPayload.split('\n');
     payloadArray.forEach(element => {
+        element = element.trim();
         if (element.length > 1) {
-            element = element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
-            element = element.trim();
+            newelement = element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
             options = {
                 hostname: 'http-intake.logs.datadoghq.com',
                 rejectUnauthorized: false,
@@ -93,7 +93,7 @@ async function datadog( fmtPayload, err) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Content-Length': element.length,
+                    'Content-Length': newelement.length,
                     'DD-API-KEY': process.env.DATADOG_TOKEN
                 }
             }
@@ -112,7 +112,7 @@ async function datadog( fmtPayload, err) {
             })
 
             // submit payload via webhook to
-            req.write(element);
+            req.write(newelement.trim());
             req.end();
         };
     });

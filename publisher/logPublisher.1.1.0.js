@@ -42,7 +42,7 @@ client.on("connect", function() {
     console.log("You are now connected");
 });
 
-function splunk( fmtPayload, err) {
+async function splunk( fmtPayload, err) {
     if (err) throw err;
 
     payloadArray = fmtPayload.split('\n');
@@ -75,12 +75,12 @@ function splunk( fmtPayload, err) {
         })
 
         // submit payload via webhook to Splunk
-        req.write(element);
+        req.write(element.trim());
         //req.end();
     });
 };
 
-function datadog( fmtPayload, err) {
+async function datadog( fmtPayload, err) {
     if (err) throw err;
 
     payloadArray = fmtPayload.split('\n');
@@ -115,7 +115,7 @@ function datadog( fmtPayload, err) {
             })
 
             // submit payload via webhook to
-            req.write(element);
+            req.write(element.trim());
             req.end();
         };
     });
