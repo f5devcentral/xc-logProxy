@@ -21,6 +21,7 @@ function count(str, find, err) {
     return (str.split(find)).length - 1;
 };
 
+// Modify payload to normalize JSON format
 function formatPayload(payload) {
     while ( count(payload, regex1) > 0) 
         {payload = payload.replace(payload.substring(payload.indexOf(regex1),payload.indexOf(regex2)+3),'' )};
@@ -39,12 +40,16 @@ client.on("connect", function() {
     console.log("You are now connected");
 });
 
+
 async function splunk( fmtPayload, err) {
     if (err) throw err;
-
+    
+    //Disaggregate payload into individual records for processing
     payloadArray = fmtPayload.split('\n');
     payloadArray.forEach(element => {
-        element = element.trim();  
+        element = element.trim();
+        
+        //Set Connection options
         options = {
             hostname: process.env.SPLUNK_HOST,
             rejectUnauthorized: false,
@@ -71,20 +76,24 @@ async function splunk( fmtPayload, err) {
             main();
         })
 
-        // submit payload via webhook to Splunk
+        // submit payload to Splunk
         req.write(element.trim());
-        //req.end();
+        req.end();
     });
 };
 
 async function datadog( fmtPayload, err) {
     if (err) throw err;
 
+    //Disaggregate payload into individual records for processing
     payloadArray = fmtPayload.split('\n');
     payloadArray.forEach(element => {
         element = element.trim();
         if (element.length > 1) {
+            //Append Datadog headers
             newelement = element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
+
+            //Set Connection options
             options = {
                 hostname: 'http-intake.logs.datadoghq.com',
                 rejectUnauthorized: false,
@@ -106,12 +115,11 @@ async function datadog( fmtPayload, err) {
 
             // handle connectivity errors 
             req.on('error', error => {
-                //throw error;
                 console.log('The client has disconnected...\n');
                 main();
             })
 
-            // submit payload via webhook to
+            // submit payload to Datdog
             req.write(newelement.trim());
             req.end();
         };
@@ -133,7 +141,6 @@ async function datadog( fmtPayload, err) {
      })
 };   
 
-// Function to get current filenames in logs directory
  function main (err) {
     if (err) {
         console.log(err.message);
@@ -142,7 +149,7 @@ async function datadog( fmtPayload, err) {
     setInterval(() => {
         client.keys('*', function (err, keys) {
             if (err) return console.log(err);
-            //iterate through keys and post records
+            //iterate through keys and log records
             for(var i = 0, len = keys.length; i < len; i++) {
                 if (client.get(keys[i]) != "" | client.get(keys[i]).result != null ) {
                     client.get(keys[i], function (err, result) {
@@ -150,6 +157,7 @@ async function datadog( fmtPayload, err) {
                             console.log(err);
                             throw error;
                         }
+                        //Post Records to provider
                         if (result != null) {
                             switch(provider) {
                                 case "splunk":

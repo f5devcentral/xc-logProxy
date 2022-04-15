@@ -24,6 +24,7 @@ function count(str, find, err) {
     return (str.split(find)).length - 1;
 };
 
+// Modify payload to normalize JSON format
 function formatPayload(payload) {
     while ( count(payload, regex1) > 0) 
         {payload = payload.replace(payload.substring(payload.indexOf(regex1),payload.indexOf(regex2)+3),'' )};
@@ -44,10 +45,12 @@ client.on("connect", function() {
 
 async function splunk( fmtPayload, err) {
     if (err) throw err;
-
+    //Disaggregate payload into individual records for processing
     payloadArray = fmtPayload.split('\n');
     payloadArray.forEach(element => {
         element = element.trim();  
+        
+        //Set Connection options
         options = {
             hostname: process.env.SPLUNK_HOST,
             rejectUnauthorized: false,
@@ -74,20 +77,24 @@ async function splunk( fmtPayload, err) {
             main();
         })
 
-        // submit payload via webhook to Splunk
+        // submit payload to Splunk
         req.write(element.trim());
-        //req.end();
+        req.end();
     });
 };
 
 async function datadog( fmtPayload, err) {
     if (err) throw err;
 
+    //Disaggregate payload into individual records for processing
     payloadArray = fmtPayload.split('\n');
     payloadArray.forEach(element => {
         element = element.trim();
         if (element.length > 1) {
+            //Append Datadog headers
             element = element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
+            
+            //Set Connection options
             options = {
                 hostname: 'http-intake.logs.datadoghq.com',
                 rejectUnauthorized: false,
@@ -109,12 +116,11 @@ async function datadog( fmtPayload, err) {
 
             // handle connectivity errors 
             req.on('error', error => {
-                //throw error;
                 console.log('The client has disconnected...\n');
                 main();
             })
 
-            // submit payload via webhook to
+            // submit payload to Datadog
             req.write(element.trim());
             req.end();
         };
@@ -153,6 +159,7 @@ async function datadog( fmtPayload, err) {
                             console.log(err);
                             throw error;
                         }
+                        //Post Records to provider
                         if (result != null) {
                             switch(provider) {
                                 case "splunk":
