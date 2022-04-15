@@ -15,10 +15,11 @@ The LogProxy service, (*hosted locally*) inserts the appropriate[^1] authenticat
 
  - **splunk_host**: The Splunk hostname/IP address associated with the [HTTP Event collector](https://docs.splunk.com/Documentation/SplunkCloud/latest/Data/HECExamples) endpoint, *ex: '206.124.134.22'*.  The default HEC port of 8088 w/https is assumed.
  - **splunk_hec**: The [Splunk HEC token](https://docs.splunk.com/Documentation/SplunkCloud/8.2.2201/Config/ManageHECtokens), *ex: 'b5dasdcsd62-02d4-474d-80b5-b25ba198ecb'*.
- - **datadog_token**: The [Datadog API key](https://docs.datadoghq.com/account_management/api-app-keys/), *ex: '507c494ef6915bae370ae6b565a44a16'*. 
- - analytic_provider: "datadog"
- - listen_port: "30601" 
+ - **datadog_token**: The [Datadog API key](https://docs.datadoghq.com/account_management/api-app-keys/), *ex: '507c4941231231215e37asdfsadd16'*. 
+ - **analytic_provider**:  Specify which analytics vendor to redirect logs towards; select either '*splunk*' or '*datadog*'.
+ - **listen_port**: The LogProxy listening port, *ex: '30601'.  This is the port to be specified in the F5DCS LogReceiver configuration.
 
+ In addition, the included deployment file for k8s (*deploy.yml*) deploys the pod, configMap, and service.  You will still need to expose the service that it may be reachable from the F5DCS logReceiver.
 
 [^1]: The LogProxy currently supports connections to Splunk Enterprise using the [Splunk HTTP Event Collector](https://docs.splunk.com/Documentation/Splunk/8.2.6/Data/UsetheHTTPEventCollector) (HEC) and to Datadog via the [logging endpoint](https://docs.datadoghq.com/api/latest/logs/#send-logs).
    
