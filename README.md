@@ -7,7 +7,7 @@ The F5DCS LogProxy solution creates a intermediary service for an F5DCS logrecei
 
 **Enhanced Log Delivery Security**  The F5DCS log receiver offers limited configurability, (*protocol, hostname/IP, and destination port*).  The configuration options available may be sufficient for connections to analytics provider hosted locally and the log recevier supports TLS for transpot security to remote connections.  However, it does not provide a means for authentication to remote anayltics endpoints.  For access authentication to most remote services such as Datadog or to Splunk, (*over HTTPS*), the log receiver(s) will require an intermediary device. 
 
-The LogProxy service, (*hosted locally*) inserts the appropriate[^1] authentication token and securely proxies log streaming over HTTPS.
+The LogProxy service, (*hosted locally*) inserts the appropriate[^1] authentication and securely proxies log streaming over either HTTPS, HTTP, or TCP.
 
 <img src="images/logreceiver.png" width=100% height=75% alt="Flowers">
 
@@ -17,6 +17,7 @@ The LogProxy service, (*hosted locally*) inserts the appropriate[^1] authenticat
  - **splunk_hec**: The [Splunk HEC token](https://docs.splunk.com/Documentation/SplunkCloud/8.2.2201/Config/ManageHECtokens), *ex: 'b5dasdcsd62-02d4-474d-80b5-b25ba198ecb'*.
  - **datadog_token**: The [Datadog API key](https://docs.datadoghq.com/account_management/api-app-keys/), *ex: '507c4941231231215e37asdfsadd16'*. 
  - **analytic_provider**:  Specify which analytics vendor to redirect logs towards; select either '*splunk*' or '*datadog*'.
+ - **protocol**: Specify either '*https*', '*http*', or '*tcp*' for the log proxy listening endpoint
  - **listen_port**: The LogProxy listening port, *ex: '30601'.  This is the port to be specified in the F5DCS LogReceiver configuration.
 
  In addition, the included deployment file for k8s (*deploy.yml*) deploys the pod, configMap, and service.  You will still need to expose the service that it may be reachable from the F5DCS logReceiver.

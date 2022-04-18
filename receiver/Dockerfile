@@ -15,11 +15,10 @@ RUN apt install -y npm
 RUN apt install -y nodejs
 RUN npm install net crypto redis@3.1.2
 RUN apt clean
-
+RUN openssl genrsa -out key.pem
+RUN openssl req -new -key key.pem -passin pass: -subj "/C=US/ST=…/L=.../O=.../OU=.../CN=.../emailAddress=..." -out csr.pem
+RUN openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
+RUN rm csr.pem
 # Copy logReceiver.js script and config file then start logReceiverProxy
-COPY logReceiver.1.1.0.js /logReceiver.js
+COPY logReceiver.1.2.5.js /logReceiver.js
 CMD ["node", "logReceiver.js"]
-
-# Expose Port for the Application 
-EXPOSE 30601
-
