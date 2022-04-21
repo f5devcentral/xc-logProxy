@@ -4,8 +4,8 @@
 const net = require('net');
 const https = require('https');
 const http = require('http');
-const crypto = require("crypto");
-const redis = require("redis");
+const crypto = require('crypto');
+const redis = require('redis');
 const fs = require('fs');
 
 // Create and configure a Redis client.
@@ -14,7 +14,8 @@ const client = redis.createClient();
 //Set Listener values
 const listenerIP =  '0.0.0.0';
 const port = process.env.LISTEN_PORT;
-const protocol = process.env.PROTOCOL;
+const protocol = process.env.PROT;
+console.log(process.env.PROT);
 let chunks = [];
 
 function count(str, find) {
