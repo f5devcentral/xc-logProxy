@@ -13,7 +13,7 @@ The log receiver can be configured thru environment variables to listen for and 
 
 <img src="images/logreceiver.png" width=75% height=75% alt="Flowers">  
 
-Sample F5DCS workload templates are available in the 'xcTemplates' directory that can be utilized to deploy either a TCP or HTTP Log Proxy service with accompanying load balancer.  Once deployed it is a simple matter of directing the desired log receiver to the exposed endpoint.
+Sample F5DCS workload templates are available in the [xcTemplates](https://github.com/gregcoward/logProxy/tree/main/xcTemplates) directory that can be utilized to deploy either a TCP or HTTP Log Proxy service with accompanying load balancer.  Once deployed it is a simple matter of directing the desired log receiver to the exposed endpoint.
 
 **Would be recommended for testing purposes only*
 
