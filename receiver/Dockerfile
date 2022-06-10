@@ -20,5 +20,5 @@ RUN openssl req -new -key key.pem -passin pass: -subj "/C=US/ST=…/L=.../O=.../
 RUN openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
 RUN rm csr.pem
 # Copy logReceiver.js script and config file then start logReceiverProxy
-COPY logReceiver.1.2.5.js /logReceiver.js
+COPY logReceiver.1.1.5.js /logReceiver.js
 CMD ["node", "logReceiver.js"]

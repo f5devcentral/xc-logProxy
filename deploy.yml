@@ -5,10 +5,11 @@ metadata:
 data:
     splunk_host: "xxx.xxx.xxx.xxx"
     splunk_hec: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    datadog_token: "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    analytic_provider: "splunk"
+    datadog_token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    sumo_url: ""
+    analytic_provider: "sumologic"
+    prot: "tcp"
     listen_port: "30601" 
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,19 +32,24 @@ spec:
         ports:
         - containerPort: 6379
       - name: rec-service
-        image: gregorycoward/f5dcs-logreceiver:1.2.0
+        image: gregorycoward/f5dcs-logreceiver:1.2.5
         env:
           - name: LISTEN_PORT
             valueFrom:
               configMapKeyRef:
                 name: vendor-info
                 key: listen_port
+          - name: PROT
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: prot
         ports:
         - name: rec-service
           containerPort: 30601
           protocol: TCP
       - name: pub-service
-        image: gregorycoward/f5dcs-logpublisher:1.2.0
+        image: gregorycoward/f5dcs-logpublisher:1.2.5
         env:
           - name: SPLUNK_HOST
             valueFrom:

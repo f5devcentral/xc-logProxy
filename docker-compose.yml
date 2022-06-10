@@ -7,17 +7,19 @@ services:
     image: 'redis'
   receiver-service:
     restart: on-failure
-    image: 'gregorycoward/f5dcs-logreceiver:1.1.0'
+    image: 'gregorycoward/f5dcs-logreceiver:1.1.5'
     # Specify an array of ports to map
     environment:
       - LISTEN_PORT=30601
+      - PROT=tcp
     ports:
       - '30601:30601'
   publisher-service:
     restart: on-failure
-    image: 'gregorycoward/f5dcs-logpublisher:1.1.0'
+    image: 'gregorycoward/f5dcs-logpublisher:1.1.5'
     environment:
       - SPLUNK_HOST=xxxxxxxxxxxxxx
       - SPLUNK_HEC=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       - DATADOG_TOKEN=xxxxxxxxxxxxxxxxxxxxxxx
-      - ANALYTIC_PROVIDER=splunk    # - Enter either 'splunk' or 'datadog'
+      - ANALYTIC_PROVIDER=sumologic    # - Enter either 'splunk' , 'sumologic' or 'datadog'
+      - SUMO_URL=
