@@ -43,7 +43,7 @@ client.on("connect", function() {
     console.log("You are now connected");
 });
 
-async function splunk( fmtPayload, err) {
+function splunk( fmtPayload, err) {
     if (err) throw err;
     //Disaggregate payload into individual records for processing
     payloadArray = fmtPayload.split('\n');
@@ -83,7 +83,7 @@ async function splunk( fmtPayload, err) {
     });
 };
 
-async function datadog( fmtPayload, err) {
+function datadog( fmtPayload, err) {
     if (err) throw err;
 
     //Disaggregate payload into individual records for processing
@@ -165,9 +165,11 @@ async function datadog( fmtPayload, err) {
                                 case "splunk":
                                     console.log('Splunk has been selected.');
                                     splunk(formatPayload(result));
+                                    break;
                                 case "datadog":
                                     console.log('Datadog has been selected.');
                                     datadog(formatPayload(result));
+                                    break;
                             }
                         }
                     });

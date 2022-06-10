@@ -41,7 +41,7 @@ client.on("connect", function() {
 });
 
 
-async function splunk( fmtPayload, err) {
+function splunk( fmtPayload, err) {
     if (err) throw err;
     
     //Disaggregate payload into individual records for processing
@@ -82,7 +82,7 @@ async function splunk( fmtPayload, err) {
     });
 };
 
-async function datadog( fmtPayload, err) {
+function datadog( fmtPayload, err) {
     if (err) throw err;
 
     //Disaggregate payload into individual records for processing
@@ -159,13 +159,15 @@ async function datadog( fmtPayload, err) {
                         }
                         //Post Records to provider
                         if (result != null) {
-                            switch(provider) {
+                            switch(process.env.ANALYTIC_PROVIDER.toLocaleLowerCase()) {
                                 case "splunk":
                                     console.log('Splunk has been selected.');
                                     splunk(formatPayload(result));
+                                    break;
                                 case "datadog":
                                     console.log('Datadog has been selected.');
                                     datadog(formatPayload(result));
+                                    break;
                             }
                         }
                     });
