@@ -123,7 +123,7 @@
             },
             "tcp_loadbalancer": {
               "domains": [
-                "logstcp.f5dcs.aserracorp.com"
+                "<ADVERTISED DOMAIN> - ie. 'logproxy.aserracorp.com' "
               ],
               "with_sni": null
             }
