@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "name": "f5dcs-logproxy-tcp",
+    "namespace": "<NAMESPACE>",
+    "labels": {},
+    "annotations": {},
+    "description": null,
+    "disable": null
+  },
+  "spec": {
+    "service": {
+      "num_replicas": 1,
+      "containers": [
+        {
+          "name": "redis",
+          "image": {
+            "name": "public.ecr.aws/r3b6r4b3/redis:1.0.0",
+            "public": {},
+            "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
+          },
+          "init_container": null,
+          "flavor": "CONTAINER_FLAVOR_TYPE_MEDIUM",
+          "liveness_check": null,
+          "readiness_check": null,
+          "command": null,
+          "args": null
+        },
+        {
+          "name": "log-receiver",
+          "image": {
+            "name": "glcimages.azurecr.io/f5dcs-logreceiver:1.2.5",
+            "public": {},
+            "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
+          },
+          "init_container": null,
+          "flavor": "CONTAINER_FLAVOR_TYPE_MEDIUM",
+          "liveness_check": null,
+          "readiness_check": null,
+          "command": null,
+          "args": null
+        },
+        {
+          "name": "log-publisher",
+          "image": {
+            "name": "glcimages.azurecr.io/f5dcs-logpublisher:1.2.0",
+            "public": {},
+            "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
+          },
+          "init_container": null,
+          "flavor": "CONTAINER_FLAVOR_TYPE_MEDIUM",
+          "liveness_check": null,
+          "readiness_check": null,
+          "command": null,
+          "args": null
+        }
+      ],
+      "volumes": null,
+      "configuration": {
+        "parameters": [
+          {
+            "env_var": {
+              "name": "LISTEN_PORT",
+              "value": "<PORT>"
+            }
+          },
+          {
+            "env_var": {
+              "name": "PROT",
+              "value": "tcp"
+            }
+          },
+          {
+            "env_var": {
+              "name": "DATADOG_TOKEN",
+              "value": "<TOKEN>"
+            }
+          },
+          {
+            "env_var": {
+              "name": "ANALYTIC_PROVIDER",
+              "value": "<enter either datadog or splunk>"
+            }
+          },
+          {
+            "env_var": {
+              "name": "SPLUNK_HOST",
+              "value": "<IP>"
+            }
+          },
+          {
+            "env_var": {
+              "name": "SPLUNK_HEC",
+              "value": "<TOKEN>"
+            }
+          }
+        ]
+      },
+      "deploy_options": {
+        "deploy_re_sites": {
+          "site": [
+            {
+              "tenant": "ves-io",
+              "namespace": "system",
+              "name": "wes-sea"
+            },
+            {
+              "tenant": "ves-io",
+              "namespace": "system",
+              "name": "ny8-nyc"
+            }
+          ]
+        }
+      },
+      "advertise_options": {
+        "advertise_on_public": {
+          "port": {
+            "port": {
+              "info": {
+                "port": 30601,
+                "protocol": "PROTOCOL_TCP",
+                "same_as_port": {}
+              }
+            },
+            "tcp_loadbalancer": {
+              "domains": [
+                "logstcp.f5dcs.aserracorp.com"
+              ],
+              "with_sni": null
+            }
+          }
+        }
+      }
+    }
+  },
+  "resource_version": null
+}
