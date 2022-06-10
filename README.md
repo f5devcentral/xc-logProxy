@@ -1,7 +1,9 @@
 F5 Distributed Cloud Services - Log Receiver Proxy
 ============================================================================
 
-The F5DCS LogProxy solution creates a intermediary service for an F5DCS logreceiver The proxy provides:
+The log proxy service is designed to be deployed onto a Kubernetes platform, (including vK8s).  The service pod runs 3 containers providing a self-contained service requiring a single external endpoint for log ingestion.  The service (pod) architecture is illustrated below.  
+
+<img src="images/arch.png" width=100% height=75% alt="Flowers">
 
 **Log formatting** The F5DCS log receiver currently delivers logs in RFC5424 format excusivley, (refer to image below).  While this may work for some analytics implementations others, (including Splunk), will need to utilize either an additional third-party add-on or customized parser to analyze and model log entries.  The F5DCS LogProxy receives log entries and re-formats them into easily to consume JSON. This enables for simplified integration with analtyics vendors.
 
