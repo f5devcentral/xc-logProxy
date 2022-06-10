@@ -11,7 +11,7 @@ The logProxy service processes events as they are pushed for the XC log receiver
 **Log Receiver Protocol Support**
 The log receiver can be configured thru environment variables to listen for and respond to TCP, HTTP, or TLS* protocols as well as the listening port.  The specified port represents the pod port that should be exposed and reachable by the log receiver, (see below).
 
-img src="images/logreceiver.png" width=75% height=75% alt="Flowers">  
+<img src="images/logreceiver.png" width=75% height=75% alt="Flowers">  
 
 Sample F5DCS workload templates are available on the above noted Github repo that can be utilized to deploy either a TCP or HTTP Log Proxy service with accompanying load balancer.  Once deployed it is a simple matter of directing the desired log receiver to the exposed endpoint.
 
@@ -36,4 +36,3 @@ Each Log Proxy service is a self-contained K8s pod and easily scalable based on 
  In addition, the included deployment file for k8s (*deploy.yml*) deploys the pod, configMap, and service.  You will still need to expose the service that it may be reachable from the F5DCS logReceiver.
 
 [^1]: The LogProxy currently supports connections to Splunk Enterprise using the [Splunk HTTP Event Collector](https://docs.splunk.com/Documentation/Splunk/8.2.6/Data/UsetheHTTPEventCollector) (HEC), to Datadog via the [logging endpoint](https://docs.datadoghq.com/api/latest/logs/#send-logs), and to Sumo Logic via a tenant [custom HTTP endpoint](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/HTTP-Source/Upload-Data-to-an-HTTP-Source).
-   
