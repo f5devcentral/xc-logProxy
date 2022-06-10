@@ -11,7 +11,7 @@ The log proxy service is designed to be deployed onto a Kubernetes platform, (in
 
 The LogProxy service, (*hosted locally*) inserts the appropriate[^1] authentication and securely proxies log streaming over either HTTPS, HTTP, or TCP.
 
-<img src="images/logreceiver.png" width=100% height=75% alt="Flowers">
+<img src="images/logreceiver.png" width=75% height=75% alt="Flowers">
 
 **Required Input Variables** Depending upon the analytics provider utilized, the following input variables are required to be set.  These can be set using either via a Kubernetes configMap, (*example section included in the deploy.yml file*) or using the included *docker-compose.yml* file.
 
