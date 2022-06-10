@@ -5,11 +5,21 @@ The log proxy service is designed to be deployed onto a Kubernetes platform, (in
 
 <img src="images/arch.png" width=100% height=75% alt="Flowers">
 
-**Log formatting** The F5DCS log receiver currently delivers logs in RFC5424 format excusivley, (refer to image below).  While this may work for some analytics implementations others, (including Splunk), will need to utilize either an additional third-party add-on or customized parser to analyze and model log entries.  The F5DCS LogProxy receives log entries and re-formats them into easily to consume JSON. This enables for simplified integration with analtyics vendors.
+**Event Processing**
+The logProxy service processes events as they are pushed for the XC log receiver.  Entries are processed as they are received.  Once received an entry is temporarily stored in an in-memory datastore.  As soon as a record is stored, the log publishing microservice retrieves the entry, converts the entry to JSON and delivers, (via an HTTPS post) to the desired analytics/SIEM provider.  While delivery latency is increased, the difference is negligible. 
 
-**Enhanced Log Delivery Security**  The F5DCS log receiver offers limited configurability, (*protocol, hostname/IP, and destination port*).  The configuration options available may be sufficient for connections to analytics provider hosted locally and the log recevier supports TLS for transpot security to remote connections.  However, it does not provide a means for authentication to remote anayltics endpoints.  For access authentication to most remote services such as Datadog or to Splunk, (*over HTTPS*), the log receiver(s) will require an intermediary device. 
+**Log Receiver Protocol Support**
+The log receiver can be configured thru environment variables to listen for and respond to TCP, HTTP, or TLS* protocols as well as the listening port.  The specified port represents the pod port that should be exposed and reachable by the log receiver.  
 
-The LogProxy service, (*hosted locally*) inserts the appropriate[^1] authentication and securely proxies log streaming over either HTTPS, HTTP, or TCP.
+Sample F5DCS workload templates are available on the above noted Github repo that can be utilized to deploy either a TCP or HTTP Log Proxy service with accompanying load balancer.  Once deployed it is a simple matter of directing the desired log receiver to the exposed endpoint.
+
+**Would be recommended for testing purposes only*
+
+**Analytic Providers Supported**
+The Log Proxy service currently supports delivery to Splunk, (via HEC), Sumo Logic and Datadog.  End-users provides either the Splunk endpoint address and HEC token or a Datadog API key.  In both instances, events are delivered in JSON format and easily parsed by either vendor product.
+
+**Scaling**
+Each Log Proxy service is a self-contained K8s pod and easily scalable based on demand when placed behind a load balancing/ingress mechanism.
 
 <img src="images/logreceiver.png" width=75% height=75% alt="Flowers">
 
