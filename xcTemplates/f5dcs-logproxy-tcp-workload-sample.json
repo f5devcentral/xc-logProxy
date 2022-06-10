@@ -42,7 +42,7 @@
         {
           "name": "log-publisher",
           "image": {
-            "name": "glcimages.azurecr.io/f5dcs-logpublisher:1.2.0",
+            "name": "glcimages.azurecr.io/f5dcs-logpublisher:1.2.5",
             "public": {},
             "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
           },
@@ -91,6 +91,12 @@
             "env_var": {
               "name": "SPLUNK_HEC",
               "value": "<TOKEN>"
+            }
+          },
+          {
+            "env_var": {
+              "name": "SUMO_URL",
+              "value": "<provide tenant specific ingestion URL>"
             }
           }
         ]
