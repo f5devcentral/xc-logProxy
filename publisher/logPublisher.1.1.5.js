@@ -94,7 +94,7 @@ function datadog( fmtPayload, err) {
         element = element.trim();
         if (element.length > 1) {
             //Append Datadog headers
-            newelement = element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
+            newelement = element//element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
 
             //Set Connection options
             options = {

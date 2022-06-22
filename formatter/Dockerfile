@@ -17,9 +17,7 @@ RUN npm install https redis@3.1.2
 RUN apt clean
 
 # Copy logPublisher.js script and config file then start logReceiverProxy
-COPY logPublisher.1.1.7.js /logPublisher.js
-COPY datadog.js /datadog.js
-COPY sumologic.js /sumologic.js
-COPY splunk.js /splunk.js
+COPY logFormatter.1.1.7.js /logFormatter.js
+COPY logformat.js /logformat.js
 
-ENTRYPOINT ["node", "logPublisher.js"]
+ENTRYPOINT ["node", "logFormatter.js"]
