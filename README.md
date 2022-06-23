@@ -1,7 +1,7 @@
 F5 Distributed Cloud Services - Log Receiver Proxy
 ============================================================================
 
-The log proxy service is designed to be deployed onto a Kubernetes platform, (including vK8s).  The service pod runs 3 containers providing a self-contained service requiring a single external endpoint for log ingestion.  The service (pod) architecture is illustrated below.  
+The log proxy service is designed to be deployed onto a Kubernetes platform, (including vK8s).  The service pod runs 4 containers providing a self-contained service requiring a single external endpoint for log ingestion.  The service (pod) architecture is illustrated below.  
 
 <img src="images/arch.png" width=85% height=85% alt="Flowers">
 
