@@ -11,15 +11,18 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Update Ubuntu Software repository
 RUN apt update
-RUN apt install -y npm
-RUN apt install -y nodejs
+RUN apt-get -y install curl
+RUN curl -sL https://deb.nodesource.com/setup_18.x  | bash -
+RUN apt-get -y install nodejs
+WORKDIR /usr/app
+COPY ./ ./
 RUN npm install https redis@3.1.2
 RUN apt clean
 
 # Copy logPublisher.js script and config file then start logReceiverProxy
-COPY logPublisher.1.1.7.js /logPublisher.js
-COPY datadog.js /datadog.js
-COPY sumologic.js /sumologic.js
-COPY splunk.js /splunk.js
+COPY logPublisher.1.1.8.js /usr/app/logPublisher.js
+COPY datadogWorker.js /usr/app/datadogWorker.js
+COPY sumologicWorker.js /usr/app/sumologicWorker.js
+COPY splunkWorker.js /usr/app/splunkWorker.js
 
 ENTRYPOINT ["node", "logPublisher.js"]

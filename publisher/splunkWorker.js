@@ -1,14 +1,21 @@
 const https = require('https');
+const {
+    Worker,
+    isMainThread,
+    parentPort,
+    workerData,
+  } = require('worker_threads');
+
 
 function splunk( payload, err) {
     if (err) throw err;
-
+    let counter = 0;
     //Disaggregate payload into individual records for processing
     payloadArray = payload.split('\n');
     payloadArray.forEach(element => {
         element = element.trim();
         if (element.length > 1) {
-        
+        counter++;
         element = element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
         //Set Connection options
             options = {
@@ -41,9 +48,25 @@ function splunk( payload, err) {
             req.end();
         };
     });
-    return "posted";
+    return counter;
 };
 
-process.on('message', (message) => {
-    process.send(splunk(message));
-  });
+if (isMainThread) {
+    module.exports = (n) =>
+      new Promise((resolve, reject) => {
+        const worker = new Worker(__filename, {
+          workerData: n,
+        });
+        worker.on('message', resolve);
+        worker.on('error', reject);
+        worker.on('exit', (code) => {
+          if (code !== 0) {
+            reject(new Error(`Worker stopped with exit code ${code}`));
+          }
+        });
+      });
+  } else {
+    const result = splunk(workerData);
+    parentPort.postMessage(result);
+    //process.exit(0);
+  }

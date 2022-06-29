@@ -1,3 +1,10 @@
+const {
+    Worker,
+    isMainThread,
+    parentPort,
+    workerData,
+  } = require('worker_threads');
+
 //misc regex
 const regex1 = '<14';
 const regex2 = '2 - ';
@@ -22,6 +29,22 @@ function formatPayload(payload) {
     return payload;
 };
 
-process.on('message', (message) => {
-    process.send(formatPayload(message));
-  });
+if (isMainThread) {
+    module.exports = (n) =>
+      new Promise((resolve, reject) => {
+        const worker = new Worker(__filename, {
+          workerData: n,
+        });
+        worker.on('message', resolve);
+        worker.on('error', reject);
+        worker.on('exit', (code) => {
+          if (code !== 0) {
+            reject(new Error(`Worker stopped with exit code ${code}`));
+          }
+        });
+      });
+  } else {
+    const result = formatPayload(workerData);
+    parentPort.postMessage(result);
+    //process.exit(0);
+  }

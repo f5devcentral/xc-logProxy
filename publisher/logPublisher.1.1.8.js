@@ -2,10 +2,12 @@
 const https = require('https');
 const redis = require("redis");
 const path = require('path');
-const { fork } = require('child_process');
-
+const datadogWorker = require('./datadogWorker');
+const splunkWorker = require('./splunkWorker');
+const sumologicWorker = require('./sumologicWorker');
 const provider = process.env.ANALYTIC_PROVIDER.toLocaleLowerCase();
 
+let counter = 0;
 // Create and configure a Redis client.
 const client = redis.createClient(); 
 
@@ -13,32 +15,25 @@ client.on("connect", function() {
     console.log("Log publisher is connected");
 });
 
-function splunk( fmtPayload, err) {
+async function splunk( fmtPayload, err) {
     if (err) throw err;
-    const childProcess = fork(path.join(__dirname, 'splunk'));
-    childProcess.on('message', (message) => {
-        console.log(message);
-    });
-    return childProcess.send(fmtPayload);
-    
+    const result = await splunkWorker(fmtPayload);
+    counter = counter + result;
+    console.log(counter + ' total records posted');
 };
 
-function datadog(fmtPayload, err) {
+async function datadog(fmtPayload, err) {
     if (err) throw err;
-    const childProcess = fork(path.join(__dirname, 'datadog'));
-    childProcess.on('message', (message) => {
-        console.log(message);
-    });
-    return childProcess.send(fmtPayload);
+    const result = await datadogWorker(fmtPayload);
+    counter = counter + result;
+    console.log(counter + ' total records posted');
 };
 
-function sumologic( fmtPayload, err) {
+async function sumologic( fmtPayload, err) {
     if (err) throw err;
-    const childProcess = fork(path.join(__dirname, 'sumologic'));
-    childProcess.on('message', (message) => {
-        console.log(message);
-    });
-    return childProcess.send(fmtPayload);
+    const result = await sumologicWorker(fmtPayload);
+    counter = counter + result;
+    console.log(counter + ' total records posted');
 };
 
 function deleteRecord (key, err) {
@@ -93,7 +88,7 @@ function deleteRecord (key, err) {
                 };
             };
         });
-    },3000);
+    },10000);
 };
 
 

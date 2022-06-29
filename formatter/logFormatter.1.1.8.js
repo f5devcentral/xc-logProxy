@@ -2,19 +2,10 @@
 const redis = require("redis");
 const crypto = require('crypto');
 const path = require('path');
-const { fork } = require('child_process');
+const formatWorker = require('./formatWorker');
 
 // Create and configure a Redis client.
 const client = redis.createClient(); 
-
-//misc regex
-const regex1 = '<14>';
-const regex2 = '-';
-const regex3 = '\\';
-const regex4 = ':"{"';
-const regex5 = '}"';
-
-const regex6 = '/<.*{/';
 
 function count(str, find, err) {
     if (err) {
@@ -42,10 +33,13 @@ function deleteRecord (key, err) {
      })
 };   
 
-function postRecords(records){
+async function fmtPayload(payload, err) {
+    if (err) throw err;
+    const result = await formatWorker(payload);
+
     var id = crypto.randomBytes(4).toString('hex');
     //Post record ID and record to Redis
-    client.set('POST-'+ id, records);
+    client.set('POST-'+ id, result);
     console.log('Events formatted - ' + id)
 };
 
@@ -65,12 +59,7 @@ function main (err) {
                             console.log(err);
                             throw error;
                         }
-                        const childProcess = fork(path.join(__dirname, 'logformat'));
-                        childProcess.on('message', (message) => {
-                            postRecords(message);
-                          });
-                        childProcess.send(result);
-
+                        fmtPayload(result);    
                     });
                     deleteRecord(keys[i]);
                 };

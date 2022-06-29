@@ -1,8 +1,15 @@
 const https = require('https');
+const {
+    Worker,
+    isMainThread,
+    parentPort,
+    workerData,
+  } = require('worker_threads');
+
 
 function sumologic( fmtPayload, err) {
     if (err) throw err;
-
+    let counter=0;
     sumoURL = process.env.SUMO_URL
     sumoHost = sumoURL.substring(sumoURL.indexOf('://')+ 3,sumoURL.indexOf('.com')+ 4)
     sumoPath = sumoURL.substring(sumoURL.indexOf('.com')+ 4,sumoURL.length)
@@ -12,7 +19,7 @@ function sumologic( fmtPayload, err) {
     payloadArray.forEach(element => {
         element = element.trim();
         if (element.length > 1) {
-
+            counter++;
             element = element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
             //Set Connection options
             options = {
@@ -44,9 +51,25 @@ function sumologic( fmtPayload, err) {
             req.end();
         };
     });
-    return "posted";
+    return counter;
 };
 
-process.on('message', (message) => {
-    process.send(sumologic(message));
-  });
+if (isMainThread) {
+    module.exports = (n) =>
+      new Promise((resolve, reject) => {
+        const worker = new Worker(__filename, {
+          workerData: n,
+        });
+        worker.on('message', resolve);
+        worker.on('error', reject);
+        worker.on('exit', (code) => {
+          if (code !== 0) {
+            reject(new Error(`Worker stopped with exit code ${code}`));
+          }
+        });
+      });
+  } else {
+    const result = sumologic(workerData);
+    parentPort.postMessage(result);
+    //process.exit(0);
+  }

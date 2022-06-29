@@ -11,8 +11,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Update Ubuntu Software repository
 RUN apt update
-RUN apt install -y npm
-RUN apt install -y nodejs
+RUN apt-get -y install curl
+RUN curl -sL https://deb.nodesource.com/setup_18.x  | bash -
+RUN apt-get -y install nodejs
+WORKDIR /usr/app
+COPY ./ ./
 RUN npm install net crypto redis@3.1.2
 RUN apt clean
 RUN openssl genrsa -out key.pem
@@ -20,5 +23,5 @@ RUN openssl req -new -key key.pem -passin pass: -subj "/C=US/ST=…/L=.../O=.../
 RUN openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
 RUN rm csr.pem
 # Copy logReceiver.js script and config file then start logReceiverProxy
-COPY logReceiver.1.1.7.js /logReceiver.js
+COPY logReceiver.1.1.7.js /usr/app/logReceiver.js
 CMD ["node", "logReceiver.js"]

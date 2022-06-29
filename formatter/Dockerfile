@@ -11,13 +11,16 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Update Ubuntu Software repository
 RUN apt update
-RUN apt install -y npm
-RUN apt install -y nodejs
+RUN apt-get -y install curl
+RUN curl -sL https://deb.nodesource.com/setup_18.x  | bash -
+RUN apt-get -y install nodejs
+WORKDIR /usr/app
+COPY ./ ./
 RUN npm install https redis@3.1.2
 RUN apt clean
 
 # Copy logPublisher.js script and config file then start logReceiverProxy
-COPY logFormatter.1.1.7.js /logFormatter.js
-COPY logformat.js /logformat.js
+COPY logFormatter.1.1.8.js /usr/app/logFormatter.js
+COPY formatWorker.js /usr/app/formatWorker.js
 
 ENTRYPOINT ["node", "logFormatter.js"]
