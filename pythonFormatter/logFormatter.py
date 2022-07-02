@@ -1,11 +1,13 @@
 import redis
-import asyncio
+#import asyncio
 # from formatWorker import *
 import os
-from threading import Timer
+# from threading import Timer
+import time
+
 
 try:
-    client = redis.Redis(host='localhost', port=6379, db=0)
+    client = redis.StrictRedis(host='localhost', port=6379, db=0)
     print("Log formatter is connected")
 except:
     print("Error: Could not connect to Redis")
@@ -73,11 +75,12 @@ def getCallback(err, result):
     if err:
         print(err)
         raise ValueError(err['message'])
-    fmtPayload(result)
+    return fmtPayload(result)
 
 #Second parameter of client.keys()
 def keysCallback(err, keys):
-    if err: return print(err)
+    # print("test")
+    if err: return err
     #Iterate through keys and log records
     for i in range(len(keys)):
         current = client.get(keys[i])
@@ -87,11 +90,23 @@ def keysCallback(err, keys):
     
 run = True
 
-def main(err=None):
-    if err:
-        print(err['message'])
+def callbackTest():
+    # print("hey")
+    # client.keys("PRE-*", keysCallback(err, keys))
+    # in batches of 500 delete keys matching user:*
+    for keybatch in batcher(client.scan_iter('PRE-:*'),500):
+        print(*keybatch)
+        client.set('POST-'+id, formatPayloader(client.get(*keybatch)))
+        client.delete(*keybatch)
+
+def batcher(iterable, n):
+    args = [iter(iterable)]
+    return zip(*args)
+
+def main():
     print("Log formatting service started")
-    if run == True:
-        Timer(3,  client.keys("PRE-*", keysCallback))
+    while run == True:
+        callbackTest()
+        time.sleep(3)
     
 main()
