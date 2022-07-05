@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "name": "f5dcs-logproxy-tcp",
+    "name": "xc-logproxy-tcp",
     "namespace": "<NAMESPACE>",
     "labels": {},
     "annotations": {},
@@ -28,26 +28,37 @@
         {
           "name": "log-receiver",
           "image": {
-            "name": "glcimages.azurecr.io/f5dcs-logreceiver:1.2.5",
+            "name": "glcimages.azurecr.io/f5dcs-logreceiver:1.1.7",
             "public": {},
             "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
           },
           "init_container": null,
-          "flavor": "CONTAINER_FLAVOR_TYPE_MEDIUM",
+          "flavor": "CONTAINER_FLAVOR_TYPE_LARGE",
           "liveness_check": null,
           "readiness_check": null,
           "command": null,
           "args": null
         },
         {
+          "name": "formatter",
+          "image": {
+            "name": "glcimages.azurecr.io/f5dcs-logformatter:1.1.8",
+            "public": {},
+            "pull_policy": "IMAGE_PULL_POLICY_ALWAYS"
+          },
+          "flavor": "CONTAINER_FLAVOR_TYPE_LARGE",
+          "command": [],
+          "args": []
+        },
+        {
           "name": "log-publisher",
           "image": {
-            "name": "glcimages.azurecr.io/f5dcs-logpublisher:1.2.5",
+            "name": "glcimages.azurecr.io/f5dcs-logpublisher:1.1.8",
             "public": {},
             "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
           },
           "init_container": null,
-          "flavor": "CONTAINER_FLAVOR_TYPE_MEDIUM",
+          "flavor": "CONTAINER_FLAVOR_TYPE_LARGE",
           "liveness_check": null,
           "readiness_check": null,
           "command": null,
@@ -101,21 +112,8 @@
           }
         ]
       },
-      "deploy_options": {
-        "deploy_re_sites": {
-          "site": [
-            {
-              "tenant": "ves-io",
-              "namespace": "system",
-              "name": "wes-sea"
-            },
-            {
-              "tenant": "ves-io",
-              "namespace": "system",
-              "name": "ny8-nyc"
-            }
-          ]
-        }
+      "deploy_options": {        
+        "all_res": {}
       },
       "advertise_options": {
         "advertise_on_public": {
