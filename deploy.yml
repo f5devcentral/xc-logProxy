@@ -32,7 +32,7 @@ spec:
         ports:
         - containerPort: 6379
       - name: rec-service
-        image: gregorycoward/f5dcs-logreceiver:1.2.5
+        image:  glcimages.azurecr.io/f5dcs-logreceiver:1.1.7
         env:
           - name: LISTEN_PORT
             valueFrom:
@@ -48,8 +48,10 @@ spec:
         - name: rec-service
           containerPort: 30601
           protocol: TCP
+      - name: format-service
+        image: glcimages.azurecr.io/f5dcs-logformatter:1.1.8
       - name: pub-service
-        image: gregorycoward/f5dcs-logpublisher:1.2.5
+        image: glcimages.azurecr.io/f5dcs-logpublisher:1.1.8
         env:
           - name: SPLUNK_HOST
             valueFrom:
