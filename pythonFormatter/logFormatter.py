@@ -3,36 +3,71 @@ import redis
 # from formatWorker import *
 import os
 # from threading import Timer
+import re
 import time
+from itertools import zip_longest
 
 
 try:
-    client = redis.StrictRedis(host='localhost', port=6379, db=0)
+    client = redis.StrictRedis(host='localhost', port=6379, db=0, charset="utf-8", decode_responses=True)
     print("Log formatter is connected")
 except:
     print("Error: Could not connect to Redis")
 
 #misc regex
-regex1 = '<14'
+regex1 = "<14"
 regex2 = '2 - '
 regex3 = '\\'
 regex4 = ':"{"'
 regex5 = '}"'
+regex6 = '7 - '
+regex7 = '{"ddsource"'
 
-def count(str, find, err):
-    if err:
-        print(err['message'])
-    return len(str.split(find)) - 1
+def count(string, find):
+    # print(string)
+    print(len(string.split(find)) - 1)
+    return len(string.split(find))
 
 #Modify payload to normalize JSON format
 def formatPayload(payload):
-    while ( count(payload, regex1) > 0):
-        payload = payload.replace(payload.substring(payload.index(regex1),payload.index(regex2)+3),'' )
+    print("start")
+    print(payload[:75])
+
+    # print(payload.index(regex2))
+    # print(type(str(regex1)), type(str(payload[:4])))
+    # print(regex1, payload[:3])
+    # print(payload[payload.index(regex1):payload.index(regex2)+3])
+    #try:
+    #    payload = payload.replace(payload[payload.index(regex1):payload.index(regex2)+3],'')
+    #except:
+    #    print("Nope")
+        
+    #try:
+        #payload = payload[70:]
+        #payload.replace(payload[payload.index(regex1):payload.index(regex7)+len(regex7)],'')
+    #except:
+    #    print("Double nope")
+    
+    #hile ( count(payload, regex1) > 0){payload = payload.replace(payload.substring(payload.indexOf(regex1),payload.indexOf(regex2)+3),'' 
+    #while count(payload, regex1) > 0:
+    try:
+        payload = payload.replace(payload[payload.index(regex1):payload.index(regex2)+len(regex2)-1], '')   
+    except:
+        pass
+    try:
+        payload = payload.replace(payload[payload.index(regex1):payload.index(regex6)+len(regex6)-1], '')
+    except:
+        print("OH SHIT")
+        return payload
 
     payload = payload.replace(regex3,'' )
     payload = payload.replace(regex4,':{"' )
     payload = payload.replace(regex5,'}' )
     payload = payload.replace(' ','' )
+
+    print("end")
+    print(payload[:75])
+
     return payload
 
 #Second parameter of client.delete()
@@ -92,21 +127,29 @@ run = True
 
 def callbackTest():
     # print("hey")
+
     # client.keys("PRE-*", keysCallback(err, keys))
     # in batches of 500 delete keys matching user:*
-    for keybatch in batcher(client.scan_iter('PRE-:*'),500):
+    for keybatch in batcher(client.scan_iter('PRE-*'),500):
         print(*keybatch)
-        client.set('POST-'+id, formatPayloader(client.get(*keybatch)))
+        test = formatPayload(client.get(*keybatch))
+        id = os.urandom(4).hex()
+        client.set('POST-'+id, test)
         client.delete(*keybatch)
 
 def batcher(iterable, n):
     args = [iter(iterable)]
-    return zip(*args)
+    return zip_longest(*args)
 
 def main():
     print("Log formatting service started")
+    keys = client.keys('PRE-*')
+    #print(keys)
     while run == True:
-        callbackTest()
-        time.sleep(3)
+        try:
+            callbackTest()
+            time.sleep(3)
+        except KeyboardInterrupt:
+            break
     
 main()
