@@ -4,9 +4,8 @@ FROM python:3.9
 
 # LABEL about the custom image
 LABEL maintainer="g.coward@f5.com"
-LABEL version="0.1"
-LABEL description="Custom image for F5DCS logReceiverProxy - publisher"
-
+LABEL version="0.2"
+LABEL description="Custom image for F5DCS logReceiverProxy - formatter"
 
 
 # Set display port as an environment variable

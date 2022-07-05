@@ -25,13 +25,13 @@ regex7 = '{"ddsource"'
 
 def count(string, find):
     # print(string)
-    print(len(string.split(find)) - 1)
+    #print(len(string.split(find)) - 1)
     return len(string.split(find))
 
 #Modify payload to normalize JSON format
 def formatPayload(payload):
     print("start")
-    print(payload[:75])
+    #print(payload[:75])
 
     # print(payload.index(regex2))
     # print(type(str(regex1)), type(str(payload[:4])))
@@ -49,24 +49,27 @@ def formatPayload(payload):
     #    print("Double nope")
     
     #hile ( count(payload, regex1) > 0){payload = payload.replace(payload.substring(payload.indexOf(regex1),payload.indexOf(regex2)+3),'' 
-    #while count(payload, regex1) > 0:
-    try:
-        payload = payload.replace(payload[payload.index(regex1):payload.index(regex2)+len(regex2)-1], '')   
-    except:
-        pass
-    try:
-        payload = payload.replace(payload[payload.index(regex1):payload.index(regex6)+len(regex6)-1], '')
-    except:
-        print("OH SHIT")
-        return payload
+    while count(payload, regex1) > 0:
+        try:
+            payload = payload.replace(payload[payload.index(regex1):payload.index(regex2)+len(regex2)-1], '')   
+        except:
+            pass
+        try:
+            payload = payload.replace(payload[payload.index(regex1):payload.index(regex6)+len(regex6)-1], '')
+        except:
+            #print("OH SHIT")
+            return payload
 
     payload = payload.replace(regex3,'' )
     payload = payload.replace(regex4,':{"' )
     payload = payload.replace(regex5,'}' )
     payload = payload.replace(' ','' )
 
+    if payload.slice(-1) != '}':
+        payload = payload + '"}'
+
     print("end")
-    print(payload[:75])
+    #print(payload[:75])
 
     return payload
 
