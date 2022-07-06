@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: redis-server
-        image: gregorycoward/redis:1.0.0
+        image: glcimages.azurecr.io/redis:1.0.0
         ports:
         - containerPort: 6379
       - name: rec-service
@@ -49,9 +49,9 @@ spec:
           containerPort: 30601
           protocol: TCP
       - name: format-service
-        image: glcimages.azurecr.io/f5dcs-logformatter:1.1.8
+        image: glcimages.azurecr.io/f5dcs-pyformatter:1.0
       - name: pub-service
-        image: glcimages.azurecr.io/f5dcs-logpublisher:1.1.8
+        image: glcimages.azurecr.io/f5dcs-logpublisher:1.1.9
         env:
           - name: SPLUNK_HOST
             valueFrom:
