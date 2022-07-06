@@ -14,12 +14,12 @@
         {
           "name": "redis",
           "image": {
-            "name": "public.ecr.aws/r3b6r4b3/redis:1.0.0",
+            "name": "glcimages.azurecr.io/redis:1.0.0",
             "public": {},
             "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
           },
           "init_container": null,
-          "flavor": "CONTAINER_FLAVOR_TYPE_MEDIUM",
+          "flavor": "CONTAINER_FLAVOR_TYPE_TINY",
           "liveness_check": null,
           "readiness_check": null,
           "command": null,
@@ -33,7 +33,7 @@
             "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
           },
           "init_container": null,
-          "flavor": "CONTAINER_FLAVOR_TYPE_LARGE",
+          "flavor": "CONTAINER_FLAVOR_TYPE_MEDIUM",
           "liveness_check": null,
           "readiness_check": null,
           "command": null,
@@ -42,7 +42,7 @@
         {
           "name": "formatter",
           "image": {
-            "name": "glcimages.azurecr.io/f5dcs-logformatter:1.1.8",
+            "name": "glcimages.azurecr.io/f5dcs-pyformatter:1.0",
             "public": {},
             "pull_policy": "IMAGE_PULL_POLICY_ALWAYS"
           },
@@ -53,7 +53,7 @@
         {
           "name": "log-publisher",
           "image": {
-            "name": "glcimages.azurecr.io/f5dcs-logpublisher:1.1.8",
+            "name": "glcimages.azurecr.io/f5dcs-logpublisher:1.1.9",
             "public": {},
             "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
           },
