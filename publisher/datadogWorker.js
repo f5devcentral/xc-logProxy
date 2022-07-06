@@ -16,7 +16,8 @@ function datadog( payload, err) {
         element = element.trim();
         if (element.length > 1) {
             counter++;
-            element = element.replace('{','{"ddsource":"f5dcs_logproxy","host":"f5dcs",');
+            element = element.replace('{','{"ddsource":"f5dcs_logproxy",');
+            element = element + '"}'
             //Set Connection options
             options = {
                 hostname: 'http-intake.logs.datadoghq.com',
