@@ -13,7 +13,7 @@ The log receiver can be configured thru environment variables to listen for and 
 
 <img src="images/logreceiver.png" width=75% height=75% alt="Flowers">  
 
-Sample F5DCS workload templates are available in the [xcTemplates](https://github.com/gregcoward/logProxy/tree/main/xcTemplates) directory that can be utilized to deploy either a TCP or HTTP Log Proxy service with accompanying load balancer.  Once deployed it is a simple matter of directing the desired log receiver to the exposed endpoint.
+Sample XC workload templates are available in the [xcTemplates](https://github.com/gregcoward/logProxy/tree/main/xcTemplates) directory that can be utilized to deploy either a TCP or HTTP Log Proxy service with accompanying load balancer.  Once deployed it is a simple matter of directing the desired log receiver to the exposed endpoint.
 
 **Would be recommended for testing purposes only*
 
@@ -31,8 +31,8 @@ Each Log Proxy service is a self-contained K8s pod and easily scalable based on 
   - **sumo_url**: The [Sumo logic custom access URL](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/HTTP-Source/Upload-Data-to-an-HTTP-Source), *ex: 'https://endpoint1.collection.us2.sumologic.com/receiver/v1/http/ZaVnC4dhaV2GihOv5x8UPmT988-wHV-vK8uUEk3li_2X...'*. 
  - **analytic_provider**:  Specify which analytics vendor to redirect logs towards; select either '*splunk*' or '*datadog*'.
  - **protocol**: Specify either '*tcp*', '*http*', or '*https*' for the log proxy listening endpoint.
- - **listen_port**: The LogProxy listening port, *ex: '30601'.  This is the port to be specified in the F5DCS LogReceiver configuration.
+ - **listen_port**: The LogProxy listening port, *ex: '30601'.  This is the port to be specified in the XC LogReceiver configuration.
 
- In addition, the included deployment file for k8s (*deploy.yml*) deploys the pod, configMap, and service.  You will still need to expose the service that it may be reachable from the F5DCS logReceiver.
+ In addition, the included deployment file for k8s (*deploy.yml*) deploys the pod, configMap, and service.  You will still need to expose the service that it may be reachable from the XC logReceiver.
 
 [^1]: The LogProxy currently supports connections to Splunk Enterprise using the [Splunk HTTP Event Collector](https://docs.splunk.com/Documentation/Splunk/8.2.6/Data/UsetheHTTPEventCollector) (HEC), to Datadog via the [logging endpoint](https://docs.datadoghq.com/api/latest/logs/#send-logs), and to Sumo Logic via a tenant [custom HTTP endpoint](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/HTTP-Source/Upload-Data-to-an-HTTP-Source).
