@@ -3,7 +3,7 @@ F5 XC - Log Receiver Proxy
 
 The log proxy service is designed to be deployed onto a Kubernetes platform, (including vK8s).  The service pod runs 4 containers providing a self-contained service requiring a single external endpoint for log ingestion.  The service (pod) architecture is illustrated below.  
 
-<img src="images/arch.png" width=85% height=85% alt="Flowers">
+<img src="images/architecture.png" width=85% height=85% alt="Flowers">
 
 **Event Processing**
 The logProxy service processes events as they are pushed for the XC log receiver.  Entries are processed as they are received.  Once received an entry is temporarily stored in an in-memory datastore.  As soon as a record is stored, the log formatting microservice retrieves the entry, converts the entry to JSON and marks the entry as ready for pushing in the redis datastore.  The log publishing microservice pulls formatted entries from the datastore and delivers, (via an HTTPS post) to the desired analytics/SIEM provider.  While delivery latency is increased, the difference is negligible.
