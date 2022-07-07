@@ -14,7 +14,7 @@
         {
           "name": "redis",
           "image": {
-            "name": "glcimages.azurecr.io/redis:1.0",
+            "name": "glcimages.azurecr.io/f5dcs-redis:1.5",
             "public": {},
             "pull_policy": "IMAGE_PULL_POLICY_DEFAULT"
           },
