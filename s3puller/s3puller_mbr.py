@@ -8,7 +8,6 @@ import time
 import gzip
 import requests
 
-
 access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 datadog_token = os.environ.get('DATADOG_TOKEN')
@@ -28,6 +27,7 @@ try:
 except:
     print("Error: Could not connect to Redis")
     run = False
+
 
 def datadog_push(payload):
     DD_ENDPOINT = 'https://http-intake.logs.datadoghq.com/api/v2/logs'
@@ -53,9 +53,11 @@ def s3_puller():
                 content = decoder.read()
                 #print(content)
                 contentarray = content.split('\n')
-                for i in range(len(contentarray)):
-                    result = datadog_push(str(contentarray[i]))
-                    print(result)
+                
+                id = os.urandom(4).hex()
+                #Post record ID and record to Redis
+                print("Events formatted - " + id)
+                client.set('POST-'+id, content)
             
         # Delete S3 file and local temp file    
         s3_object.delete()
@@ -68,7 +70,7 @@ def main():
         try:
             print('Pulling now....')
             s3_puller()
-            time.sleep(3)
+            time.sleep(6000)
         except KeyboardInterrupt:
             break
 main()

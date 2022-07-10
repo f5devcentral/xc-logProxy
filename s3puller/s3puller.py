@@ -7,6 +7,8 @@ import io
 import time
 import gzip
 import requests
+import aiohttp
+import asyncio
 
 
 access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -29,12 +31,35 @@ except:
     print("Error: Could not connect to Redis")
     run = False
 
-def datadog_push(payload):
-    DD_ENDPOINT = 'https://http-intake.logs.datadoghq.com/api/v2/logs'
-    #use the 'headers' parameter to set the HTTP headers:
-    #payload = payload.replace('{','{"ddsource":"f5dcs_logproxy",');
-    x = requests.post( DD_ENDPOINT, data = payload, headers = {'Content-Length': str(len(payload)), 'Content-Type': 'application/json','DD-API-KEY': datadog_token})
+def datadog_push(content):
+    datadog_endpoint = 'https://http-intake.logs.datadoghq.com/api/v2/logs'
+    contentarray = content.split('\n')
+    for i in range(len(contentarray)):
+        result = datadog_push(str(contentarray[i]))
+        id = os.urandom(4).hex()
+        #Post record ID and record to Redis
+        print("Events formatted - " + id)
+        client.set('POST-'+id, content)
+        #payload = payload.replace('{','{"ddsource":"f5dcs_logproxy",');
+        x = requests.post( datadog_endpoint, data = result, headers = {'Content-Length': str(len(payload)), 'Content-Type': 'application/json','DD-API-KEY': datadog_token})
     return(x)
+
+def datadog_publish(content):
+    contentarray = content.split('\n')
+    datadog_endpoint = 'https://http-intake.logs.datadoghq.com/api/v2/logs'
+    async def get(datadog_endpoint):
+    async with aiohttp.ClientSesion() as session:
+        i = 0
+        async with session.post(url, json=contentarray[])
+            i++d
+            return response
+    loop = asyncio.get_event_loop()
+
+    multiple_requests = [get("http://your-website.com") for _ in range(10)]
+
+    results = loop.run_until_complete(asyncio.gather(*multiple_requests))
+
+    print("Results: %s" % results)
 
 def s3_puller():
     s3_bucket_name = bucket_name
@@ -52,10 +77,8 @@ def s3_puller():
                 # Let's read the content using read()
                 content = decoder.read()
                 #print(content)
-                contentarray = content.split('\n')
-                for i in range(len(contentarray)):
-                    result = datadog_push(str(contentarray[i]))
-                    print(result)
+                result = datadog_push(content)
+                #print(result)
             
         # Delete S3 file and local temp file    
         s3_object.delete()
