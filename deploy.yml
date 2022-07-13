@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: redis-server
-        image: glcimages.azurecr.io/redis:1.0.0
+        image: glcimages.azurecr.io/f5dcs-redis:1.5
         ports:
         - containerPort: 6379
       - name: rec-service
