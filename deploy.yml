@@ -49,7 +49,7 @@ spec:
           containerPort: 30601
           protocol: TCP
       - name: format-service
-        image: glcimages.azurecr.io/f5dcs-pyformatter:1.0
+        image: glcimages.azurecr.io/f5dcs-pyformatter:1.5
       - name: pub-service
         image: glcimages.azurecr.io/f5dcs-logpublisher:1.1.9
         env:
