@@ -20,9 +20,9 @@ RUN npm install https redis@3.1.2 workerpool
 RUN apt clean
 
 # Copy logPublisher.js script and config file then start logReceiverProxy
-COPY logPublisher.1.1.8.js /usr/app/logPublisher.js
+COPY s3Publisher.1.0.js /usr/app/s3Publisher.js
 COPY datadogWorker.js /usr/app/datadogWorker.js
 COPY sumologicWorker.js /usr/app/sumologicWorker.js
 COPY splunkWorker.js /usr/app/splunkWorker.js
 
-ENTRYPOINT ["node", "logPublisher.js"]
+ENTRYPOINT ["node", "s3Publisher.js"]

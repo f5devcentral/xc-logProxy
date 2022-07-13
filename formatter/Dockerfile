@@ -16,6 +16,6 @@ WORKDIR  /usr/app
 RUN pip install redis 
 
 # Copy logPublisher.js script and config file then start logReceiverProxy
-COPY pyformatter.1.0.py /usr/app/logFormatter.py
+COPY pyformatter.1.5.py /usr/app/logFormatter.py
 
 CMD [ "python", "logFormatter.py" ]
