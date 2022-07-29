@@ -1,6 +1,6 @@
 
 # Import required modules
-import os
+import os, sys, stat
 import boto3
 import io
 import time
@@ -11,7 +11,6 @@ access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
 datadog_token = os.environ.get('DATADOG_TOKEN')
 bucket_name = os.environ.get('BUCKET_NAME')
-pub_count = os.environ.get('PUB_COUNT')
 splunk_host = os.environ.get('SPLUNK_HOST')
 splunk_hec = os.environ.get('SPLUNK_HEC')
 analytic_provider = os.environ.get('ANALYTIC_PROVIDER')
@@ -27,14 +26,9 @@ s3_resource = boto3.resource('s3',
 
 
 def s3_puller():
-    count = 0
     s3_bucket_name = bucket_name
     s3_bucket = s3_resource.Bucket(s3_bucket_name)
     for obj in s3_bucket.objects.all():
-        if (count >= int(pub_count)):
-            count = 1
-        else: 
-            count += 1
         s3_object = s3_resource.Object(s3_bucket_name, obj.key)
         
         keyname = str(obj.key)
