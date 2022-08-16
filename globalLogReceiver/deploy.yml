@@ -1,0 +1,46 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3poller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: s3poller
+      component: poller
+  template:
+    metadata:
+      labels:
+        application: s3poller
+        component: poller
+    spec:
+      containers:
+      - name: poller
+        image:  gregorycoward/f5dcs-s3poller:4.0
+        env:
+          - name: ANALYTIC_PROVIDER
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: analytic_provider
+          - name: DATADOG_TOKEN
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: datadog_token
+          - name: BUCKET_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key: bucket_name
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key:  aws_access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              configMapKeyRef:
+                name: vendor-info
+                key:  aws_access_key_id

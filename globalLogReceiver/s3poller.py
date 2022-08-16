@@ -5,16 +5,19 @@ import boto3
 import io
 import time
 import gzip
-import requests
+#import requests
+import urllib3
 
-access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
-secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
-datadog_token = os.environ.get('DATADOG_TOKEN')
-bucket_name = os.environ.get('BUCKET_NAME')
-splunk_host = os.environ.get('SPLUNK_HOST')
-splunk_hec = os.environ.get('SPLUNK_HEC')
-analytic_provider = os.environ.get('ANALYTIC_PROVIDER')
-sumo_url = os.environ.get('SUMO_URL')
+http = urllib3.PoolManager()
+
+access_key_id = "AKIATU2JBUC6VBHDH3OH"
+secret_access_key = "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"
+datadog_token = "7b3937e27be3fbcb7265f0d10d20289f"
+bucket_name = "glc-logbucket"
+#splunk_host = ""
+#splunk_hec = "*****************"
+analytic_provider = "datadog"
+sumo_url = ""
 
 run = True
 
@@ -56,9 +59,10 @@ def s3_puller():
                         i = i + 1
                     payload = payload + "]"
                     #print(payload)
-                    r = requests.post(
+                    r = http.request(
+                        "POST",
                         "https://http-intake.logs.datadoghq.com/api/v2/logs",
-                        data = gzip.compress(payload.encode('utf-8')),
+                        body = gzip.compress(payload.encode('utf-8')),
                         headers = {"Content-Type":"application/json", "DD-API-KEY": datadog_token, "Content-Encoding": "gzip"}
                     )
                 elif analytic_provider == "splunk":
@@ -110,6 +114,7 @@ def main():
         try:
             print('Pulling now....')
             s3_puller()
+            run == True
             time.sleep(6)
         except KeyboardInterrupt:
             break

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vendor-info
+data:
+    datadog_token: "7b3937e27be3fbcb7265f0d10d20289f"
+    analytic_provider: "datadog"
+    bucket_name: "glc-logbucket"
+    aws_access_key_id: "AKIATU2JBUC6VBHDH3OH"
+    aws_secret_access_key: "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"
